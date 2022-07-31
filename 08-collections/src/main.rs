@@ -1,14 +1,15 @@
+use std::collections::HashMap;
 fn main() {
     vectors();
     hashmaps();
+    statistics();
 }
 
 fn vectors() {
-    let v = vec![1,2,3,4,5];
+    let v = vec![1, 2, 3, 4, 5];
 
     let third = &v[2];
     println!("The third element is {}", third);
-
 
     // let does_not_exist = v[100]; // this will cause the program to panic and crash
     let does_not_exist = v.get(100); // this doesnt crash but returns a Option<T>
@@ -30,8 +31,6 @@ fn vectors() {
 }
 
 fn hashmaps() {
-    use std::collections::HashMap;
-
     let teams = vec![String::from("Blue"), String::from("Yellow")];
     let initial_scores = vec![10, 50];
 
@@ -54,4 +53,56 @@ fn hashmaps() {
     for (key, value) in &scores {
         println!("{}: {}", key, value);
     }
+}
+
+fn statistics() {
+    let mut v: Vec<i32> = vec![1, 2, 3, 10, 20, 1, 4, 2];
+    v.sort();
+    let mean = mean(&v);
+    println!("mean of {:?}: {}", v, mean);
+    let median = median(&v);
+    println!("median of {:?}: {}", v, median);
+    let mode = mode(&v);
+    println!("mode of {:?}: {:?}", v, mode);
+}
+
+fn mean(input: &Vec<i32>) -> f32 {
+    let mut sum = 0.0;
+
+    for v in input {
+        sum += *v as f32;
+    }
+
+    return sum/input.len() as f32;
+}
+
+fn median(input: &Vec<i32>) -> f32 {
+    let input_len = input.len();
+    match (input_len % 2) == 0 {
+        false => input[input_len / 2] as f32,
+        true => (input[input_len / 2 - 1] + input[input_len / 2]) as f32 / 2.0,
+    }
+}
+
+fn mode(input: &Vec<i32>) -> Vec<i32> {
+    let mut counter: HashMap<i32, i32> = HashMap::new();
+
+    for v in input {
+        let count = counter.entry(*v).or_insert(0);
+        *count += 1;
+    }
+
+    let mut max_keys: Vec<i32> = vec![];
+    let mut max_count: i32 = -i32::MAX;
+
+    for (item, count) in counter {
+        if count > max_count {
+            max_keys = vec![item];
+            max_count = count;
+        } else if count == max_count {
+            max_keys.push(item);
+        }
+    }
+
+    return max_keys;
 }
