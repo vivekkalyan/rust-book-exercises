@@ -4,6 +4,7 @@ fn main() {
     hashmaps();
     statistics();
     convert();
+    company();
 }
 
 fn vectors() {
@@ -128,5 +129,65 @@ fn pig_latin(s: &String) -> String {
         Some('u') => format!("{}-hay", s),
         None => String::from(""),
         char => format!("{}-{}ay", &s[1..s.len()], char.unwrap()),
+    }
+}
+
+fn company() {
+    let s1: String = String::from("Add Sally to Engineering");
+    let s2: String = String::from("Add Bob to Engineering");
+    let s3: String = String::from("Add Amir to Sales");
+
+    let mut company = Company {
+        department_members: HashMap::new(),
+    };
+    company.add_from_string(s1);
+    company.add_from_string(s2);
+    company.add_from_string(s3);
+    println!("Employees: {:?}", &company.get_employees());
+    println!(
+        "Engineering employees: {:?}",
+        &company.get_employees_by_deparment(String::from("Engineering"))
+    );
+}
+
+#[derive(Debug)]
+struct Company {
+    department_members: HashMap<String, Vec<String>>,
+}
+
+impl Company {
+    fn add_from_string(&mut self, s: String) {
+        let mut words = s.split_whitespace();
+        words.next();
+        let employee = String::from(words.next().unwrap());
+        words.next();
+        let department = String::from(words.next().unwrap());
+        let employee_list = self.department_members.entry(department).or_insert(vec![]);
+        employee_list.push(employee);
+    }
+
+    fn get_employees(&self) -> Vec<String> {
+        let mut employees = vec![];
+
+        for (department, employee_list) in &self.department_members {
+            for employee in employee_list {
+                employees.push(String::from(employee));
+            }
+        }
+        employees.sort();
+
+        employees
+    }
+
+    fn get_employees_by_deparment(&self, department: String) -> Vec<String> {
+        let mut employees = vec![];
+
+        let employee_list = self.department_members.get(&department).unwrap();
+        for employee in employee_list {
+            employees.push(String::from(employee));
+        }
+        employees.sort();
+
+        employees
     }
 }
