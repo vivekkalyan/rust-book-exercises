@@ -3,6 +3,7 @@ fn main() {
     vectors();
     hashmaps();
     statistics();
+    convert();
 }
 
 fn vectors() {
@@ -73,7 +74,7 @@ fn mean(input: &Vec<i32>) -> f32 {
         sum += *v as f32;
     }
 
-    return sum/input.len() as f32;
+    return sum / input.len() as f32;
 }
 
 fn median(input: &Vec<i32>) -> f32 {
@@ -105,4 +106,27 @@ fn mode(input: &Vec<i32>) -> Vec<i32> {
     }
 
     return max_keys;
+}
+
+fn convert() {
+    let s1: String = String::from("hello");
+    let s2: String = String::from("world");
+    let s3: String = String::from("amazing");
+
+    println!("{} -> {}", s1, pig_latin(&s1));
+    println!("{} -> {}", s2, pig_latin(&s2));
+    println!("{} -> {}", s3, pig_latin(&s3));
+}
+
+fn pig_latin(s: &String) -> String {
+    let first_char = s.chars().nth(0);
+    match first_char {
+        Some('a') => format!("{}-hay", s),
+        Some('e') => format!("{}-hay", s),
+        Some('i') => format!("{}-hay", s),
+        Some('o') => format!("{}-hay", s),
+        Some('u') => format!("{}-hay", s),
+        None => String::from(""),
+        char => format!("{}-{}ay", &s[1..s.len()], char.unwrap()),
+    }
 }
