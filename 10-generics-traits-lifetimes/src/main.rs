@@ -1,6 +1,7 @@
 fn main() {
     generics();
     traits();
+    lifetimes();
 }
 
 fn generics() {
@@ -82,4 +83,46 @@ fn traits() {
     };
 
     println!("1 new tweet: {}", tweet.summarize());
+}
+
+fn lifetimes() {
+    fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+        if x.len() > y.len() {
+            x
+        } else {
+            y
+        }
+    }
+
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
+    let result = longest(string1.as_str(), string2);
+    println!("The longest string is {}", result);
+
+    struct ImportantExcerpt<'a> {
+        part: &'a str,
+    }
+
+    impl<'a> ImportantExcerpt<'a> {
+        fn level(&self) -> i32 {
+            // 1st elision rule applies
+            3
+        }
+
+        fn announce_and_return_part(&self, annoucement: &str) -> &str {
+            // 3rd elision rule applies
+            println!("Attention please: {}", annoucement);
+            self.part
+        }
+    }
+
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.').next().expect("Could not find a '.'");
+    let i = ImportantExcerpt {
+        part: first_sentence,
+    };
+    println!(
+        "important: {}",
+        i.announce_and_return_part("Making an announcement")
+    );
 }
