@@ -16,7 +16,7 @@ fn main() {
 
     let user2 = build_user(String::from("new@example.com"), String::from("newuser"));
 
-    let user3 = User{
+    let user3 = User {
         email: String::from("new1@example.com"),
         ..user2
     };

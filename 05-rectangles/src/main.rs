@@ -56,4 +56,3 @@ fn main() {
     let rect4 = Rectangle::square(20);
     println!("rect4 is {:?}", rect4);
 }
-

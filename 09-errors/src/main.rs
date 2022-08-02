@@ -24,7 +24,6 @@ fn error_matching() {
             }
         },
     };
-
 }
 
 fn error_propagating() {
