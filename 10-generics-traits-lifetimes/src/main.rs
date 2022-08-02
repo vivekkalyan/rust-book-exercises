@@ -2,6 +2,7 @@ fn main() {
     generics();
     traits();
     lifetimes();
+    together();
 }
 
 fn generics() {
@@ -124,5 +125,27 @@ fn lifetimes() {
     println!(
         "important: {}",
         i.announce_and_return_part("Making an announcement")
+    );
+}
+
+fn together() {
+    use std::fmt::Display;
+
+    fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+    where
+        T: Display,
+    {
+        println!("Announcement! {}", ann);
+        if x.len() > y.len() {
+            x
+        } else {
+            y
+        }
+    }
+    let x = String::from("abcd");
+    let y = String::from("xyz");
+    println!(
+        "{}",
+        longest_with_an_announcement(&x, &y, "The longest string is:")
     );
 }
