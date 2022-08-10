@@ -1,5 +1,6 @@
 fn main() {
     closures();
+    iterators();
 }
 
 fn closures() {
@@ -105,4 +106,69 @@ fn closures() {
         r.width
     });
     println!("{:#?}, sorted in {num_sort_operations} operations", list);
+}
+
+fn iterators() {
+    let v = vec![1, 2, 3];
+    let v_iter1 = v.iter();
+    for val in v_iter1 {
+        println!("Got: {}", val);
+    }
+
+    let mut v_iter2 = v.iter();
+    assert_eq!(v_iter2.next(), Some(&1));
+    assert_eq!(v_iter2.next(), Some(&2));
+    assert_eq!(v_iter2.next(), Some(&3));
+    assert_eq!(v_iter2.next(), None);
+
+    // consuming adaptors
+    let v_iter3 = v.iter();
+    let total: i32 = v_iter3.sum();
+    assert_eq!(total, 6);
+
+    // iterator adaptors
+    let v2: Vec<_> = v.iter().map(|x| x + 1).collect();
+    assert_eq!(v2, vec![2, 3, 4]);
+
+    // capture environment
+    #[derive(PartialEq, Debug)]
+    struct Shoe {
+        size: u32,
+        style: String,
+    }
+
+    fn shoes_in_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+        shoes.into_iter().filter(|s| s.size == shoe_size).collect()
+    }
+
+    let shoes = vec![
+        Shoe {
+            size: 10,
+            style: String::from("sneaker"),
+        },
+        Shoe {
+            size: 13,
+            style: String::from("sandal"),
+        },
+        Shoe {
+            size: 10,
+            style: String::from("boot"),
+        },
+    ];
+
+    let in_my_size = shoes_in_size(shoes, 10);
+
+    assert_eq!(
+        in_my_size,
+        vec![
+            Shoe {
+                size: 10,
+                style: String::from("sneaker")
+            },
+            Shoe {
+                size: 10,
+                style: String::from("boot")
+            },
+        ]
+    );
 }
